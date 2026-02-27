@@ -1,0 +1,42 @@
+What I have learned
+ques) What are spartial points and what are feature point - Partial points are the "locations in space" imagine a grid of pixels in an image . Each small square(pixel) the boxe is a spartial point 
+
+for 100 x 100 pixels 
+
+there are 10000 pixels - 10000 square - 10000 unique positions - 10000 spartial point 
+
+-- Feature point 
+the value at each spartial point is called feature point - In an grayscale image there is 1 feature point brightness in RGB image there is 3 feature point in one spartial point 
+
+
+
+-------------
+temporal = related to time
+
+-------------
+
+I had a really bad miss conception for the multi head attention 
+what I thought was that In mutihead attention we calculate the different sets of query , key , value then apply attention and get the output embeddings n times . then we do point wise addition of these embeddings and get the final emebeddings 
+
+but in the multihead attention what really happens is that we first calculate the projection that is the key , query , value vector each of shape (seq_len , embed_dims ) (lets say the shape is (seq_len , 64))then we for the specified number of heads lets say 8 we calculate the how big do we need the part of each embedding to be . i.e size of each subsection of the embeddings required for the specified number of head (here 8 as 64 /8 = 8 ).  so the new inputs would become ( seq_len , 8 , 8 ) where each head axis = 1 is assigned 1/8th part of original embedding axis = -1 here the embedding refers to the key , query , value vector  
+
+We usually transpose to:
+
+(num_heads, seq_len, head_dim)
+
+So attention is computed independently per head.
+
+after that we concatenate all these subparts of the embedding to form the whole embedding that is 8+8+8+8..... note concatenation means adding at the end 
+
+---------------
+I have found the reason why we generally have the embeddings in the power of 2 and and also why we have the number of heads as the power of 2 . 
+this is because when we split the embedding in subparts for the multihead attention it should be properly divisible i.e not leaving any remainder if it is not properly divisible then we might leave some part of it 
+
+--------------
+
+so now for the positional encodings now my thought process - 1 positional encodings must be the size of the original embeddings so we have to find some operations that make them as they we
+
+--------------
+
+I have learned about jax.vmap and how does this help in the parallel computation . The main problem that it solved was the originally i was using 2 for to iterate to each of the postion on the embed_dims in the batch 
+size so this broke the parallel computation part of the code because pos_embedding we calculated one at a time instead of getting calculated across the batch . so now I wrote the function 
