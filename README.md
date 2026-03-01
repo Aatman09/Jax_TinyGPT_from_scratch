@@ -82,7 +82,7 @@ Implemented via `jax.value_and_grad`.
 
 ---
 
-## ⚠️ Important Note: Why this Phase is NOT Trainable
+## Important Note: Why this Phase is NOT Trainable
 
 ### Current State:
 The model is built using standard Python classes and objects to make the code readable and explicit.
